@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Umeå University – Storytelling Study</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background:#fafafa; color:#111; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 24px; }
+    .card { background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 4px 18px rgba(0,0,0,0.08); }
+    h1 { font-size: 1.4rem; margin: 0 0 12px; }
+    p { line-height: 1.5; }
+    .notice { background: #fff7d6; border: 1px solid #f0d98c; padding: 12px; border-radius: 10px; margin: 12px 0; }
+    .btn { display: inline-block; padding: 14px 18px; font-size: 1.05rem; border-radius: 10px; text-decoration: none; border: 1px solid #222; }
+    .btn:focus { outline: 3px solid #222; outline-offset: 3px; }
+    .btn-primary { background: #111; color: #fff; }
+    .foot { font-size: 0.9rem; color: #444; margin-top: 16px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-labelledby="title">
+      <h1 id="title">Experts’ Perception of AI-Generated Personalised Stories</h1>
+      <p>
+        Thank you for joining this Umeå University study. You will interact with an AI storytelling system and answer a few questions.
+      </p>
+
+      <div class="notice">
+        <strong>Heads up:</strong> Our university server uses <span class="mono">http://</span> for this short research deployment.
+        Your browser may show a security warning. It is safe to continue.
+        If you see a page saying the site isn’t secure, choose <em>Continue to site</em>.
+      </div>
+
+      <p>
+        When you’re ready, click the button below. We’ll pass your Prolific IDs securely through the URL so you get properly credited.
+      </p>
+
+      <p>
+        <a id="startBtn" class="btn btn-primary" href="#" target="_blank" rel="noopener">
+          Start the Storytelling Study
+        </a>
+      </p>
+
+      <p class="foot">
+        If the button doesn’t open in a new tab, your browser may be blocking pop-ups.
+        In that case, use this fallback link:<br />
+        <a id="fallbackLink" class="mono" href="#" target="_blank" rel="noopener">http://storytelling.cs.umu.se:5000/</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Read Prolific params from this page’s URL (if present)
+    const params = new URLSearchParams(window.location.search);
+    const pid   = params.get('PROLIFIC_PID')  || '';
+    const sid   = params.get('STUDY_ID')      || '';
+    const sess  = params.get('SESSION_ID')    || '';
+
+    // Your Flask app base URL (http on the university server)
+    const targetBase = 'http://storytelling.cs.umu.se:5000/';
+
+    // Rebuild the target URL and preserve Prolific params
+    const target = new URL(targetBase);
+    if (pid)  target.searchParams.set('PROLIFIC_PID', pid);
+    if (sid)  target.searchParams.set('STUDY_ID', sid);
+    if (sess) target.searchParams.set('SESSION_ID', sess);
+
+    // Wire up links
+    const startBtn = document.getElementById('startBtn');
+    const fallback = document.getElementById('fallbackLink');
+    startBtn.href  = target.toString();
+    fallback.href  = target.toString();
+
+    // Optional: try to auto-open in a new tab after 3s (keeps this page as instructions)
+    setTimeout(() => {
+      try { window.open(target.toString(), '_blank', 'noopener'); } catch (_) {}
+    }, 3000);
+  </script>
+</body>
+</html>
